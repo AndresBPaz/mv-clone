@@ -1,0 +1,34 @@
+
+
+
+<nav class="navbar navbar-expand-lg">
+  <a class="-logo" routerLink="/">
+    <img src="assets/images/logo.jpg">
+  </a>
+
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
+    <ul class="navbar-nav ms-auto pe-3">
+
+      <li class="nav-item ">
+        <a class="nav-link hover-underline-animation " routerLink="/blog">Comunicados</a>
+      </li>
+
+      <li class="nav-item ">
+        <a class="nav-link hover-underline-animation " routerLink="/contacto">Contacto</a>
+      </li>
+
+      <form [formGroup]="formsearchGroup" (submit)="OnSearch()" novalidate >
+        <input name="formsearch" type="text" formControlName="formsearch" id="formsearch" placeholder="Buscar" aria-label="Buscar">
+        <button class="ps-2 pe-2" type="submit"><i class="pi pi-search"></i></button>
+      </form>
+    </ul>
+
+
+  </div>
+</nav>
+
+

@@ -1,0 +1,22 @@
+
+<div class="p-3 -tarjeta">
+
+  <div *ngFor="let blog of blogs " class="-col-portada">
+    <div class="">
+      <a [routerLink]="['/blog', blog.slug]"><img [src]="blog._id | image: 'news'"  [alt]="blog.name" class="img-thumbnail"></a>
+    </div>
+
+    <div class="">
+      <p class="-titulo">{{ blog.name }}</p>
+      <div [innerHtml]="blog.date | date: 'mediumDate'" class="-fecha"></div>
+      <div [innerHTML]="blog.intro | truncate: 200 " class="-intro" ></div>
+      <a [routerLink]="['/blog', blog.slug]" class="-btn-ver-mas float-end">leer mas</a>
+    </div>
+  </div>
+
+
+  <button *ngIf="showButton" (click)="onScrollTop()" class="button"><i class="pi pi-angle-double-up"></i></button>
+</div>
+
+
+

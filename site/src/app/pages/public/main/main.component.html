@@ -1,0 +1,30 @@
+<div class="text-center">
+  <img src="/assets/images/ad-970x250.jpg" class="img-fluid" />
+</div>
+
+<div class="external -container">
+  <div class="internal">
+    <div class="-hero-header-copy">
+      <h1 class="-hero-header-title">Hoy voy a ganar</h1>
+    </div>
+  </div>
+</div>
+
+<div class="-breadcrumb">Inicio</div>
+
+<div class="-col-3-1">
+  <div
+    class="-blogs"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="OnScrollDown()"
+    (scrolledUp)="OnScrollUp()">
+    <app-news4></app-news4>
+  </div>
+
+  <div class="-publicidad text-end">
+    <img src="/assets/images/ad-300x-600.jpg" />
+    <img src="/assets/images/ad-300-250.jpg" />
+  </div>
+</div>

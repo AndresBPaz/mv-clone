@@ -1,0 +1,60 @@
+
+
+
+<div class="-breadcrumb">
+  <a routerLink="/">Inicio</a>
+  / <a routerLink="/blog">Comunicados</a> / <span [innerHTML]="blog.name"></span>
+</div>
+
+<div class="-col-3-1">
+
+  <div class="-blogs">
+
+      <div class="p-4" *ngIf="view">
+          <h1 [innerHTML]="blog.name"></h1>
+          <div [innerHtml]="blog.date | date: 'mediumDate'" class="-nombre" ></div>
+
+          <div>
+            <img [src]="blog._id | image: 'news'"  [alt]="blog.name"  class="img-fluid" width="100%"  *ngIf="view">
+          </div>
+
+          <div>
+            <div [innerHTML]="descriptionSafe" class="-descripcion" ></div>
+
+              <hr>
+
+              <iframe [src]="linkface"
+                      width="450"
+                      height="35"
+                      style="border:none;
+                          overflow:hidden;
+                          color:white;"
+                      allowfullscreen="true"
+                      allow="autoplay;
+                          clipboard-write;
+                          encrypted-media;
+                          picture-in-picture;
+                          web-share">
+              </iframe>
+
+          </div>
+
+
+      </div>
+
+  </div>
+
+  <div class="-publicidad text-end">
+    <img src="/assets/images/ad-300x-600.jpg" >
+    <img src="/assets/images/ad-300-250.jpg" >
+  </div>
+
+</div>
+
+
+
+
+
+
+
+

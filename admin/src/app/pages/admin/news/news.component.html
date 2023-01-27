@@ -1,0 +1,298 @@
+<!-- begin::Header -->
+<div class="card-header border-0 pt-5 d-flex justify-content-between">
+    <h3 class="card-title align-items-start flex-column">
+        <span class="card-label fw-bolder fs-3 mb-1">Lista, creación, edición de Noticias</span>
+    </h3>
+    <div class="card-toolbar">
+        <button pButton pRipple type="button" icon="pi pi-plus" (click)="created()" label="Crear" class="p-button-rounded p-button-info" ></button>
+    </div>
+</div>
+<!-- end::Header -->
+<!-- begin::Body -->
+<div class="card-body py-3">
+    <!-- begin::Table container -->
+    <div class="table-responsive">
+        <p-table #dt [value]="blogs" [(selection)]="selectedBlogs" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true"
+                 [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" responsiveLayout="scroll"
+                 [paginator]="true" currentPageReportTemplate="Mostrar {first} a {last} de {totalRecords} noticias"
+                 [filterDelay]="0" [globalFilterFields]="['name', 'description', 'active']">
+            <ng-template pTemplate="caption">
+                <div class="bg-light- row flex align-items-center justify-content-end">
+                    <div class="col">
+                        <h5 class="m-0"></h5>
+                    </div>
+                    <div class="col d-flex  justify-content-end">
+                        <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal(search.value, 'contains')" placeholder="Busqueda Global" #search/>
+                    </span>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header" class="bg-primary">
+                <tr>
+                    <th style="width: 10rem">Imagen</th>
+                    <th pSortableColumn="name">
+                        <div class="flex justify-content-between align-items-center">
+                            Nombre
+                            <p-sortIcon field="name"></p-sortIcon>
+                            <p-columnFilter type="text" field="name" display="menu" class="ml-auto"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="description">
+                        <div class="flex justify-content-between align-items-center">
+                            Descripcion
+                            <p-sortIcon field="description"></p-sortIcon>
+                            <p-columnFilter type="text" field="description" display="menu" class="ml-auto"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th  style="width: 12rem" pSortableColumn="active">
+                        <div class="flex justify-content-between align-items-center">
+                            Status
+                            <p-sortIcon field="active"></p-sortIcon>
+                            <p-columnFilter field="active" matchMode="equals" [showMenu]="false">
+                                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                    <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Todos" [showClear]="true">
+                                        <ng-template let-option pTemplate="item">
+                                            <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                                        </ng-template>
+                                    </p-dropdown>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="width: 12rem">
+                        <div class="flex justify-content-end align-items-center">
+                            <span class="float-end">Acciones</span>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-blog let-ri="rowIndex">
+                <tr class="p-selectable-row">
+                    <td (click)="editBlog(blog)">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol me-5">
+                                <img [src]="blog._id | image: 'news'" width="100px" class="cursor-pointer" [alt]="blog.name" (click)="editBlog(blog)"/>
+                            </div>
+                        </div>
+                    </td>
+                    <td (click)="editBlog(blog)">
+                        <span class="p-column-title">nombre</span>
+                        {{blog.name}}
+                    </td>
+                    <td (click)="editBlog(blog)">
+                        <span class="p-column-title">description</span>
+                        <span [innerHTML]="blog.description | truncate: 90"></span>
+                    </td>
+                    <td>
+                        <span class="p-column-title">status</span>
+                        <span class="badge badge-light-success fs-7 fw-bold" *ngIf="blog.active">Activo</span>
+                        <span class="badge badge-light-danger fs-7 fw-bold" *ngIf="!blog.active">In Activo</span>
+                    </td>
+                    <td style="text-align: center">
+                        <!--                        <button pButton type="button" class="p-button-secondary" icon="pi pi-cog"></button>-->
+                        <button type="button" (click)="active(blog._id, !blog.active)"
+                                [title]="blog.active ? 'Desactivar':'Activar'"
+                                class="btn btn-icon btn-bg-light btn-sm me-1"
+                                [class.btn-active-color-danger]="blog.active"
+                                [class.btn-active-color-success]="!blog.active"
+                                [disabled]="isLoading">
+                            <ng-container *ngIf="!isLoading">
+                                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'" class="svg-icon svg-icon-3"></span>
+                            </ng-container>
+                            <ng-container *ngIf="isLoading">
+                                <span class="indicator-progress" [style.display]="'block'">
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
+                            </ng-container>
+                        </button>
+                        <button type="button" (click)="editBlog(blog)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" title="Editar" [disabled]="isLoading">
+                            <ng-container *ngIf="!isLoading">
+                                <span [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'" class="svg-icon svg-icon-3"></span>
+                            </ng-container>
+                            <ng-container *ngIf="isLoading">
+                                <span class="indicator-progress" [style.display]="'block'">
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
+                            </ng-container>
+                        </button>
+                        <button type="button"
+                                title="Eliminar"
+                                (click)="delete(blog._id)"
+                                class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm cursor-pointer"
+                                [disabled]="isLoading">
+                            <ng-container *ngIf="!isLoading">
+                                <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'" class="svg-icon svg-icon-3"></span>
+                            </ng-container>
+                            <ng-container *ngIf="isLoading">
+                                <span class="indicator-progress" [style.display]="'block'">
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                </span>
+                            </ng-container>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontro ninguna Noticia.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog [header]="create ? 'Crear Noticia':'Editar Noticia ' + blog.name"
+          [(visible)]="blogDialog" [modal]="true" [breakpoints]="{'960px': '75vw', '540px': '100vw'}" [style]="{width: '50vw'}"
+          [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="body">
+        <form (ngSubmit)="saveBlog(formCreate)"  #formCreate="ngForm">
+            <div class="p-fluid grid row">
+                <div class="field col-12 mt-5 pt-3">
+                  <span class="p-float-label">
+                      <input type="text" id="name" name="name" pInputText [(ngModel)]="blog.name" autocomplete="off" required>
+                      <label for="name">
+                          Nombre
+                      </label>
+                  </span>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <label for="intro">
+                        Intro
+                    </label>
+                    <span class="p-float-label">
+                      <p-editor [(ngModel)]="blog.intro" [style]="{'height':'320px'}" id="intro" name="intro"></p-editor>
+                  </span>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <label for="description">
+                        Descripción
+                    </label>
+                  <span class="p-float-label">
+
+                      <p-editor [(ngModel)]="blog.description" [style]="{'height':'320px'}" id="description" name="description">
+                           <ng-template pTemplate="header">
+                                <span class="ql-formats">
+                                <select class="ql-font"></select>
+                                <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                <select class="ql-color"></select>
+                                <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-script" value="sub"></button>
+                                <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-header" value="1"></button>
+                                <button class="ql-header" value="2"></button>
+                                <button class="ql-blockquote"></button>
+                                <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-indent" value="-1"></button>
+                                <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-direction" value="rtl"></button>
+                                <select class="ql-align"></select>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-link"></button>
+                                <button class="ql-image"></button>
+                                <button class="ql-video"></button>
+                                <button class="ql-formula"></button>
+                                </span>
+                                <span class="ql-formats">
+                                <button class="ql-clean"></button>
+                                </span>
+                            </ng-template>
+                      </p-editor>
+                  </span>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <span class="p-float-label">
+                      <p-dropdown inputId="type" id="type" name="type" [autoDisplayFirst]="false" [options]="types" [(ngModel)]="type" optionLabel="name"></p-dropdown>
+                      <label for="type">Tipo</label>
+                    </span>
+                  </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <span class="p-float-label">
+                          <p-calendar id="date" name="date" [(ngModel)]="blog.date"  [showWeek]="true"></p-calendar>
+                          <label for="date">
+                              Fecha
+                          </label>
+                    </span>
+<!--                    <p-calendar [(ngModel)]="blog.date" name="date" [inline]="true" [showWeek]="true"></p-calendar>-->
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <img [src]="thumbnail" *ngIf="thumbnail" width="150px" class="img-fluid cursor-pointer" (click)="file.click()">
+                    <img src="assets/media/misc/image.png" *ngIf="!imageInit && !thumbnail && !blog.image" width="150px" class="img-fluid cursor-pointer" (click)="file.click()">
+                    <img [src]="blog._id | image: 'news'" [alt]="blog.image" width="150px" class="product-image cursor-pointer" *ngIf="blog.image && !thumbnail" (click)="file.click()">
+                    <p-button type="button" icon="pi pi-image"
+                              (click)="file.click()"
+                              label="Seleccionar Imagen"
+                              styleClass="p-button-rounded p-button-success ms-5">
+                    </p-button>
+                    <input type="file" name="image" id="image" class="d-none" (change)="getImage($event)" #file>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <div class="alert alert-primary mt-3" role="alert">
+                        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen006.svg'"
+                              class="svg-icon svg-icon-2tx svg-icon-success me-4">
+                        </span>
+                        Imágenes (Formato png, jpg o jpeg de tamaño 1,200 x 700 a 72 dpi)<br>
+                    </div>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let image of blog.images; let i=index">
+                                <img [src]="image | imageGallery: blog._id: 'news'" class="w-100" [alt]="image">
+                                <button type="button"
+                                        title="Eliminar"
+                                        (click)="deleteImageGallery(image)"
+                                        class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm cursor-pointer"
+                                        [disabled]="isLoading">
+                                    <ng-container *ngIf="!isLoading">
+                                        <span [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'" class="svg-icon svg-icon-3"></span>
+                                    </ng-container>
+                                    <ng-container *ngIf="isLoading">
+                                        <span class="indicator-progress" [style.display]="'block'">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </ng-container>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field col-12 mt-5 pt-3">
+                    <ngx-dropzone (change)="onSelect($event)">
+                        <ngx-dropzone-label>¡Suélte, sus imágenes!</ngx-dropzone-label>
+                        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
+                            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                        </ngx-dropzone-image-preview>
+                    </ngx-dropzone>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mt-5">
+                <p-button icon="pi pi-ban" (click)="blogDialog=false" label="Cancelar" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+                <p-button type="submit" icon="pi pi-check"
+                          *ngIf="formCreate.valid"
+                          label="Guardar"
+                          styleClass="p-button-rounded p-button-success"></p-button>
+            </div>
+        </form>
+    </ng-template>
+</p-dialog>

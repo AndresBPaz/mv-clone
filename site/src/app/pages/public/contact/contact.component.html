@@ -1,0 +1,59 @@
+
+
+<div class="-breadcrumb">
+  <a href="/">Inicio</a>
+  / Contacto
+</div>
+
+<div class="row d-flex justify-content-center mb-1">
+    <div class="col-md-6  p-4 -contacto" style="background: url('/assets/images/contacto.png') no-repeat center; background-color: #145DA0" >
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="contactForm">
+
+            <div class="form-group col-md-8">
+              <label for="nombre">Nombre</label>
+              <input type="text" class="form-control"  formControlName="nombre" id="nombre">
+              <div *ngIf="contactForm.get('nombre')?.touched && contactForm.get('nombre')?.errors?.['required'] " class="alert alert-danger">El nombre es obligatorio</div>
+              <div *ngIf="contactForm.get('nombre')?.touched && contactForm.get('nombre')?.errors?.['minlength'] " class="alert alert-danger">El nombre debe ser mayor a {{ contactForm.get('nombre')?.errors?.['minlength'].requiredLength }} caracteres</div>
+
+            </div>
+
+                <div class="form-group col-md-8">
+                  <label for="correo">Correo</label>
+                  <input type="email" class="form-control"  formControlName="correo"  id="correo" >
+                  <div *ngIf="contactForm.get('correo')?.touched && contactForm.get('correo')?.errors?.['required'] " class="alert alert-danger">El correo es obligatorio</div>
+                  <div *ngIf="contactForm.get('correo')?.touched && contactForm.get('correo')?.errors?.['email'] " class="alert alert-danger">Debe ser un correo valido.</div>
+                </div>
+
+                <div class="form-group col-md-8">
+                  <label for="telefono">Teléfono</label>
+                  <input class="form-control" type="text"  formControlName="telefono" id="telefono"  >
+                  <div *ngIf="contactForm.get('telefono')?.touched && contactForm.get('telefono')?.errors?.['required'] " class="alert alert-danger">El teléfono es obligatorio</div>
+                  <div *ngIf="contactForm.get('telefono')?.touched && contactForm.get('telefono')?.errors?.['pattern'] " class="alert alert-danger">Debe ser un teléfono valido.</div>
+
+                </div>
+
+
+
+            <div class="form-group col-md-10 ">
+              <label for="comentarios">Comentarios</label>
+              <textarea class="form-control" rows="4" formControlName="comentarios" id="comentarios" required></textarea>
+              <div *ngIf="contactForm.get('comentarios')?.touched && contactForm.get('comentarios')?.errors?.['minlength'] " class="alert alert-danger">El comentario debe ser mayor a {{ contactForm.get('comentarios')?.errors?.['minlength'].requiredLength }} caracteres</div>
+            </div>
+
+          <div class="form-group col-md-12 text-end pb-0">
+            <div class="col-12 d-flex justify-content-end mb-1">
+              <re-captcha
+                #captchaRef="reCaptcha"
+                siteKey="6LdDPIMiAAAAALcT7gSQJQ5O58uT8AQ7rUyBGcVf"
+                (resolved)="showResponse($event)"
+              ></re-captcha>
+            </div>
+
+            <button type="submit" class="btn" [disabled]="contactForm.invalid"><i class="pi pi-send"></i> Enviar</button>
+          </div>
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,55 @@
+
+
+<div class="-breadcrumb">
+  <a routerLink="/">Inicio</a>
+  / Comunicados
+</div>
+
+<div class="text-center">
+  <img src="/assets/images/ad-728x90.jpg" class="img-fluid">
+</div>
+
+<div class="p-2">
+  <h1>Comunicados</h1>
+
+  <div class="-col-3-1">
+
+    <div class="-blogs">
+
+      <div class="p-3 -tarjeta"
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScrollDown()"
+      (scrolledUp)="onScrollUp()">
+      >
+
+        <div *ngFor="let blog of blogs " class="-col-portada">
+
+          <div class="">
+            <a [routerLink]="['/blog', blog.slug]"><img [src]="blog._id | image: 'news'"  [alt]="blog.name" class="img-thumbnail"></a>
+          </div>
+
+          <div class="">
+            <p class="-titulo">{{ blog.name }}</p>
+            <div [innerHtml]="blog.date | date: 'mediumDate'" class="-fecha"></div>
+            <div [innerHTML]="blog.intro | truncate: 200 " class="-intro" ></div>
+            <a [routerLink]="['/blog', blog.slug]" class="-btn-ver-mas float-end">leer mas</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="-publicidad text-end">
+      <img src="/assets/images/ad-300x-600.jpg" >
+      <img src="/assets/images/ad-300-250.jpg" >
+    </div>
+
+  </div>
+
+</div>
+
+
+

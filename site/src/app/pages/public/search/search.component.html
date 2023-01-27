@@ -1,0 +1,63 @@
+
+
+<div class="-breadcrumb">
+    <a routerLink="/">Inicio</a>
+    / Comunicados
+  </div>
+  
+  <div class="text-center">
+    <img src="/assets/images/ad-728x90.jpg" class="img-fluid">
+  </div>
+
+  <div class="">
+    <form [formGroup]="formsearchGroup" (submit)="OnSearch()" novalidate >
+      <label for="formsearch">Buscar</label>
+      <input name="formsearch" type="text" formControlName="formsearch" id="formsearch" placeholder="Buscar" aria-label="Buscar">
+      <button class="ps-2 pe-2" type="submit"><i class="pi pi-search"></i></button>
+    </form>
+  </div> 
+  
+  <div class="p-2">
+    <h1>{{search}} - Buscar resultados</h1>
+
+    <div class="-col-3-1">
+  
+      <div class="-blogs">
+  
+        <div class="p-3 -tarjeta"
+        infiniteScroll
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="OnScrollDown()"
+        (scrolledUp)="OnScrollUp()">
+        
+  
+          <div *ngFor="let blog of blogs " class="-col-portada">
+  
+            <div class="">
+              <a [routerLink]="['/blog', blog.slug]"><img [src]="blog._id | image: 'news'"  [alt]="blog.name" class="img-thumbnail"></a>
+            </div>
+  
+            <div class="">
+              <p class="-titulo">{{ blog.name }}</p>
+              <div [innerHtml]="blog.date | date: 'mediumDate'" class="-fecha"></div>
+              <div [innerHTML]="blog.intro | truncate: 200 " class="-intro" ></div>
+              <a [routerLink]="['/blog', blog.slug]" class="-btn-ver-mas float-end">Leer más</a>
+            </div>
+  
+          </div>
+        </div>
+  
+      </div>
+  
+      <div class="-publicidad text-end">
+        <img src="/assets/images/ad-300x-600.jpg" >
+        <img src="/assets/images/ad-300-250.jpg" >
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  
+  
